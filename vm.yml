@@ -1,0 +1,35 @@
+heat_template_version: 2016-10-14
+
+description: Template create vm.
+
+#####################################
+# PARAMETERS
+#####################################
+parameters:
+  key_name:
+    type: string
+    label: Key Name
+    description: Key name 
+  image:
+    type: string
+    label: Image name or ID
+    description: Image to be used for server. Please use an Centos based image.
+  flavor:
+    type: string
+    label: Flavor
+    description: Type of instance (flavor) to be used on the compute instance.
+  private_network:
+    type: string
+    label: Private Network
+    description: Setup Private network
+
+resources:
+  controller:
+    type: OS::Nova::Server
+    properties:
+      name: { get_param: 'OS::stack_name' }
+      image: {get_param: image}
+      flavor: {get_param: flavor}
+      key_name: {get_param: key_name}
+      networks:
+        - port: {get_resource: private_network}
