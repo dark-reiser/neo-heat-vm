@@ -29,14 +29,7 @@ parameters:
     default: Public_Network
 
 resources:
-  define_port:
-    type: OS::Neutron::Port
-    properties:
-      admin_state_up: true
-      network_id: { get_param: private_network }
-      security_groups:
-        - {get_resource: secgroup}
-      
+
   secgroup:
     type: OS::Neutron::SecurityGroup
     properties:
@@ -65,6 +58,13 @@ resources:
       key_name: {get_param: key_name}
       networks:
         - port: {get_resource: define_port}
+        
+  define_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_param: private_network }
+      security_groups:
+        - {get_resource: secgroup}
        
   floating:
       type: OS::Neutron::FloatingIP
