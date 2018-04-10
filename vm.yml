@@ -79,4 +79,4 @@ outputs:
     value: {get_param: key_name}
   sec_group:
     description: Security Group
-    value: {get_attr: [secgroup,name]}
+    value: {get_param: [secgroup,name]}
