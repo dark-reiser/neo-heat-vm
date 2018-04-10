@@ -69,7 +69,7 @@ resources:
     type: OS::Neutron::RouterInterface
     properties:
       router_id: { get_resource: router }
-      subnet: { get_resource: private_network }
+      subnet: { get_param: private_network }
   
   define_port:
     type: OS::Neutron::Port
