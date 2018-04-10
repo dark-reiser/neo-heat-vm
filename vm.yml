@@ -62,6 +62,7 @@ resources:
   define_port:
     type: OS::Neutron::Port
     properties:
+      admin_state_up: true
       network_id: { get_param: private_network }
       security_groups:
         - {get_resource: secgroup}
