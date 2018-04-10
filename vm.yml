@@ -40,6 +40,8 @@ resources:
   secgroup:
     type: OS::Neutron::SecurityGroup
     properties:
+      name:
+        list_join: [-, [{ get_param: stack_name },neo,secgroup]]
       rules:
         - protocol: icmp
         - protocol: udp
@@ -79,4 +81,4 @@ outputs:
     value: {get_param: key_name}
   sec_group:
     description: Security Group
-    value: {get_param: [secgroup,name]}
+    value: {get_attr: [secgroup,name]}
