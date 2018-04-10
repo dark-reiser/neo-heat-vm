@@ -41,7 +41,7 @@ resources:
     type: OS::Neutron::SecurityGroup
     properties:
       name:
-        list_join: [-, [{ get_param: stack_name },neo,secgroup]]
+        list_join: [-, [{ get_param: 'OS::stack_name' },neo,secgroup]]
       rules:
         - protocol: icmp
         - protocol: udp
