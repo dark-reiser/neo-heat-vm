@@ -22,6 +22,11 @@ parameters:
     type: string
     label: Private Network
     description: Setup Private network
+  public_network:
+    type: string
+    label: Public network name or ID
+    description: Public network to attach server to.
+    default: Public_Network
 
 resources:
   define_port:
@@ -29,6 +34,31 @@ resources:
     properties:
       admin_state_up: true
       network_id: { get_param: private_network }
+      security_groups:
+        - {get_resource: secgroup}
+      
+  secgroup:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      rules:
+        - protocol: icmp
+        - protocol: udp
+        - protocol: tcp
+          port_range_min: 22
+          port_range_max: 22
+        - protocol: tcp
+          port_range_min: 443
+          port_range_max: 443
+        - protocol: tcp
+          port_range_min: 80
+          port_range_max: 80
+        - remote_mode: remote_group_id
+        
+  floating:
+      type: OS::Neutron::FloatingIP
+      properties:
+        floating_network: {get_param: public_network}
+        port_id: {get_resource: define_port}
 
   create_vm:
     type: OS::Nova::Server
@@ -39,3 +69,14 @@ resources:
       key_name: {get_param: key_name}
       networks:
         - port: {get_resource: define_port}
+
+outputs:
+  controller:
+    description: Controller IP
+    value: {get_attr: [floating,floating_ip_address]}
+  key_name:
+    description: Key Name
+    value: {get_param: key_name}
+  sec_group:
+    description: Security Group
+    value: {get_attr: [secgroup,properties,name]}
