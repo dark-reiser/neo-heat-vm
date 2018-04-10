@@ -81,4 +81,5 @@ outputs:
     value: {get_param: key_name}
   sec_group:
     description: Security Group
-    value: {get_attr: [secgroup,name]}
+    value:
+      list_join: [-, [{ get_param: 'OS::stack_name' },neo,secgroup]]
