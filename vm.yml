@@ -58,7 +58,19 @@ resources:
       key_name: {get_param: key_name}
       networks:
         - port: {get_resource: define_port}
-        
+  
+  router:
+    type: OS::Neutron::Router
+    properties:
+      external_gateway_info:
+        network: { get_param: public_network }
+
+  router_interface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: router }
+      subnet: { get_resource: private_network }
+  
   define_port:
     type: OS::Neutron::Port
     properties:
