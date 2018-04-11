@@ -27,6 +27,14 @@ parameters:
     label: Public network name or ID
     description: Public network to attach server to.
     default: Public_Network
+  username:
+    type: string
+    label: Set Username
+    description: Set username to virtual machine.
+  password:
+    type: string
+    label: Set Password
+    description: Set password to virtual machine.
 
 resources:
 
@@ -58,6 +66,26 @@ resources:
       key_name: {get_param: key_name}
       networks:
         - port: {get_resource: define_port}
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            $USERNAME : { get_param: username }
+            $PASSWORD : { get_param: password }
+          template: |
+            #cloud-config
+            system_info:
+              default_user:
+                name: $USERNAME
+                lock_passwd: true
+                gecos: Kubernetes Interactive User
+                groups: [wheel, adm, systemd-journal]
+                sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+                shell: /bin/bash
+            chpasswd:
+              list: |
+                $USERNAME:$PASSWORD
+              expire: False
   
   define_port:
     type: OS::Neutron::Port
