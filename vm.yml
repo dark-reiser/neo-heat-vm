@@ -31,10 +31,6 @@ parameters:
     type: string
     label: Set Username
     description: Set username to virtual machine.
-  password:
-    type: string
-    label: Set Password
-    description: Set password to virtual machine.
 
 resources:
   cloud_config:
@@ -56,10 +52,6 @@ resources:
                     groups: [wheel, adm, systemd-journal]
                     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
                     shell: /bin/bash
-                chpasswd:
-                  list: |
-                    $USERNAME:$PASSWORD
-                  expire: False
           
   
   secgroup:
