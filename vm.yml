@@ -100,6 +100,9 @@ resources:
         port_id: {get_resource: define_port}
 
 outputs:
+  user:
+    description: User Name
+    value: {get_param: username}
   controller:
     description: Controller IP
     value: {get_attr: [floating,floating_ip_address]}
