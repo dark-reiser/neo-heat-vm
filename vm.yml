@@ -41,7 +41,6 @@ resources:
             str_replace:
               params:
                 $USERNAME : { get_param: username }
-                $PASSWORD : { get_param: password }
               template: |
                 #cloud-config
                 system_info:
