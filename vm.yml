@@ -35,37 +35,39 @@ parameters:
     type: string
     constraints:
       - custom_constraint: neutron.security_group
+    default: Default
   availability_zone:
     type: string
     description: The Availability Zone to launch the instance.
-
+conditions:
+  create_security_group: {equals: [{get_param: security_group}, "Default"]}
 resources:
-  # secgroup:
-  #   type: OS::Neutron::SecurityGroup
-  #   properties:
-  #     name:
-  #       list_join: [-, [{ get_param: 'OS::stack_name' },neo,secgroup]]
-  #     rules:
-  #       - protocol: icmp
-  #       - protocol: udp
-  #       - protocol: tcp
-  #         port_range_min: 22
-  #         port_range_max: 22
-  #       - protocol: tcp
-  #         port_range_min: 443
-  #         port_range_max: 443
-  #       - protocol: tcp
-  #         port_range_min: 80
-  #         port_range_max: 80
-  #       - remote_mode: remote_group_id
-
+  secgroup:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      name:
+        list_join: [-, [{ get_param: 'OS::stack_name' },neo,secgroup]]
+      rules:
+        - protocol: icmp
+        - protocol: udp
+        - protocol: tcp
+          port_range_min: 22
+          port_range_max: 22
+        - protocol: tcp
+          port_range_min: 443
+          port_range_max: 443
+        - protocol: tcp
+          port_range_min: 80
+          port_range_max: 80
+        - remote_mode: remote_group_id
+    condition: create_security_group
   define_port:
     type: OS::Neutron::Port
     properties:
       admin_state_up: true
       network_id: { get_param: private_network }
       security_groups:
-        - {get_param: security_group}
+        - {if: ["create_security_group", get_resource: secgroup, get_param: security_group]}
        
   # floating:
   #     type: OS::Neutron::FloatingIP
@@ -104,7 +106,6 @@ resources:
       user_data_format: RAW
       user_data: {get_resource: cloud_config}
       availability_zone : {get_param: availability_zone}
-      # security_group : {get_param: security_group}
 
 outputs:
   user:
