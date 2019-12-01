@@ -119,7 +119,7 @@ outputs:
     description: User Name
     value: {get_param: username}
   controller:
-    condition: get_floating_ip
+    condition: use_floating_ip
     description: Controller IP
     value: {get_attr: [floating,floating_ip_address]}
   key_name:
