@@ -31,47 +31,47 @@ parameters:
     type: string
     label: Set Username
     description: Set username to virtual machine.
-  # security_group:
-  #   type: string
-  #   constraints:
-  #     - custom_constraint: neutron.security_group
+  security_group:
+    type: string
+    constraints:
+      - custom_constraint: neutron.security_group
   availability_zone:
     type: string
     description: The Availability Zone to launch the instance.
 
 resources:
-  secgroup:
-    type: OS::Neutron::SecurityGroup
-    properties:
-      name:
-        list_join: [-, [{ get_param: 'OS::stack_name' },neo,secgroup]]
-      rules:
-        - protocol: icmp
-        - protocol: udp
-        - protocol: tcp
-          port_range_min: 22
-          port_range_max: 22
-        - protocol: tcp
-          port_range_min: 443
-          port_range_max: 443
-        - protocol: tcp
-          port_range_min: 80
-          port_range_max: 80
-        - remote_mode: remote_group_id
+  # secgroup:
+  #   type: OS::Neutron::SecurityGroup
+  #   properties:
+  #     name:
+  #       list_join: [-, [{ get_param: 'OS::stack_name' },neo,secgroup]]
+  #     rules:
+  #       - protocol: icmp
+  #       - protocol: udp
+  #       - protocol: tcp
+  #         port_range_min: 22
+  #         port_range_max: 22
+  #       - protocol: tcp
+  #         port_range_min: 443
+  #         port_range_max: 443
+  #       - protocol: tcp
+  #         port_range_min: 80
+  #         port_range_max: 80
+  #       - remote_mode: remote_group_id
 
-  define_port:
-    type: OS::Neutron::Port
-    properties:
-      admin_state_up: true
-      network_id: { get_param: private_network }
-      security_groups:
-        - {get_resource: secgroup}
+  # define_port:
+  #   type: OS::Neutron::Port
+  #   properties:
+  #     admin_state_up: true
+  #     network_id: { get_param: private_network }
+  #     security_groups:
+  #       - {get_resource: secgroup}
        
-  floating:
-      type: OS::Neutron::FloatingIP
-      properties:
-        floating_network: {get_param: public_network}
-        port_id: {get_resource: define_port}
+  # floating:
+  #     type: OS::Neutron::FloatingIP
+  #     properties:
+  #       floating_network: {get_param: public_network}
+  #       port_id: {get_resource: define_port}
 
   cloud_config:
     type: OS::Heat::MultipartMime
@@ -104,18 +104,19 @@ resources:
       user_data_format: RAW
       user_data: {get_resource: cloud_config}
       availability_zone : {get_param: availability_zone}
+      security_group : {get_param: security_group}
 
 outputs:
   user:
     description: User Name
     value: {get_param: username}
-  controller:
-    description: Controller IP
-    value: {get_attr: [floating,floating_ip_address]}
+  # controller:
+  #   description: Controller IP
+  #   value: {get_attr: [floating,floating_ip_address]}
   key_name:
     description: Key Name
     value: {get_param: key_name}
-  sec_group:
-    description: Security Group
-    value:
-      list_join: [-, [{ get_param: 'OS::stack_name' },neo,secgroup]]
+  # sec_group:
+  #   description: Security Group
+  #   value:
+  #     list_join: [-, [{ get_param: 'OS::stack_name' },neo,secgroup]]
