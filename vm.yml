@@ -33,8 +33,7 @@ parameters:
     description: Set username to virtual machine.
   security_group:
     type: string
-    constraints:
-      - custom_constraint: neutron.security_group
+    label: Set security group
     default: Default
   availability_zone:
     type: string
