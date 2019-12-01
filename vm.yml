@@ -105,9 +105,7 @@ resources:
         - port: {get_resource: define_port}
       user_data_format: RAW
       user_data: {get_resource: cloud_config}
-      availability_zone : 
-        value: {get_param: availability_zone}
-        condition: assign_availability_zone
+      availability_zone: {if: ["assign_availability_zone", {get_param: availability_zone}, Null]}
 outputs:
   user:
     description: User Name
