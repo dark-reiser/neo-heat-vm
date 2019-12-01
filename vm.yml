@@ -67,7 +67,7 @@ resources:
       admin_state_up: true
       network_id: { get_param: private_network }
       security_groups:
-        - {if: ["create_security_group", get_resource: secgroup, get_param: security_group]}
+        - {if: ["create_security_group", {get_resource: secgroup}, {get_param: security_group}]}
        
   # floating:
   #     type: OS::Neutron::FloatingIP
