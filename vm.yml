@@ -59,13 +59,13 @@ resources:
   #         port_range_max: 80
   #       - remote_mode: remote_group_id
 
-  # define_port:
-  #   type: OS::Neutron::Port
-  #   properties:
-  #     admin_state_up: true
-  #     network_id: { get_param: private_network }
-  #     security_groups:
-  #       - {get_resource: secgroup}
+  define_port:
+    type: OS::Neutron::Port
+    properties:
+      admin_state_up: true
+      network_id: { get_param: private_network }
+      security_groups:
+        - {get_param: security_group}
        
   # floating:
   #     type: OS::Neutron::FloatingIP
@@ -104,7 +104,7 @@ resources:
       user_data_format: RAW
       user_data: {get_resource: cloud_config}
       availability_zone : {get_param: availability_zone}
-      security_group : {get_param: security_group}
+      # security_group : {get_param: security_group}
 
 outputs:
   user:
