@@ -40,6 +40,7 @@ parameters:
     description: The Availability Zone to launch the instance.
 conditions:
   create_security_group: {equals: [{get_param: security_group}, "Default"]}
+  do_not_set_availability_zone: {equals: [{get_param: availability_zone}, "Default"]}
 resources:
   secgroup:
     type: OS::Neutron::SecurityGroup
@@ -104,7 +105,7 @@ resources:
         - port: {get_resource: define_port}
       user_data_format: RAW
       user_data: {get_resource: cloud_config}
-      availability_zone: {get_param: availability_zone}
+      availability_zone: {if: ["do_not_set_availability_zone", null ,{get_param: availability_zone}]}
 outputs:
   user:
     description: User Name
