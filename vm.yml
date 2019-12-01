@@ -31,6 +31,13 @@ parameters:
     type: string
     label: Set Username
     description: Set username to virtual machine.
+  # security_group:
+  #   type: string
+  #   constraints:
+  #     - custom_constraint: neutron.security_group
+  availability_zone:
+    type: string
+    description: The Availability Zone to launch the instance.
 
 resources:
   secgroup:
@@ -96,6 +103,7 @@ resources:
         - port: {get_resource: define_port}
       user_data_format: RAW
       user_data: {get_resource: cloud_config}
+      availability_zone : {get_param: availability_zone}
 
 outputs:
   user:
