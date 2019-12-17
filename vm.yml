@@ -131,3 +131,6 @@ outputs:
   vm_id:
     description: VM ID
     value: {get_resource: create_vm}
+  port_id:
+    description: Port ID
+    value: {get_resource: define_port}
