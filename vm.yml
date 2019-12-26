@@ -114,6 +114,7 @@ resources:
       user_data_format: RAW
       user_data: {get_resource: cloud_config}
       availability_zone: {if: ["do_not_set_availability_zone", null ,{get_param: availability_zone}]}
+      metadata: {neo_type: NVC2}
 outputs:
   user:
     description: User Name
